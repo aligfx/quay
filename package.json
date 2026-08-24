@@ -41,7 +41,12 @@
   "unpkg": "./dist/quay.iife.js",
   "jsdelivr": "./dist/quay.iife.js",
   "files": [
-    "dist",
+    "dist/quay.js",
+    "dist/quay.cjs",
+    "dist/quay.iife.js",
+    "dist/quay.css",
+    "dist/quay.d.ts",
+    "dist/quay.d.cts",
     "LICENSE",
     "README.md"
   ],
