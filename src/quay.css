@@ -1,0 +1,1773 @@
+/* Quay Chat — overlay widget styles (theme via --quay-* tokens). */
+
+.quay {
+  --quay-w: min(24rem, calc(100vw - 1.5rem));
+  --quay-h: min(34rem, calc(100dvh - 5.5rem));
+  --quay-fab: 2.75rem;
+  --quay-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --quay-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --quay-radius: 0.875rem;
+  --quay-fg: #ececee;
+  --quay-muted: #8b8b93;
+  --quay-line: color-mix(in oklab, #fff 8%, transparent);
+  --quay-well: #1a1a1d;
+  --quay-panel: #141416;
+  --quay-arrive-x: 1.75rem;
+  position: fixed;
+  z-index: 70;
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  color: var(--quay-fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.quay button {
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.quay.is-left {
+  right: auto;
+  left: max(1rem, env(safe-area-inset-left, 0px));
+  align-items: flex-start;
+  --quay-arrive-x: -1.75rem;
+}
+
+.quay.is-left .quay-panel {
+  right: auto;
+  left: 0;
+  transform-origin: bottom left;
+}
+
+.quay.is-side-out {
+  pointer-events: none;
+}
+
+.quay.is-side-out .quay-toggle,
+.quay.is-side-out .quay-panel {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition:
+    opacity 0.18s var(--quay-ease),
+    transform 0.18s var(--quay-ease);
+}
+
+.quay.is-side-in .quay-toggle,
+.quay.is-side-in .quay-panel {
+  animation: quay-side-in 0.32s var(--quay-ease) both;
+}
+
+@keyframes quay-side-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .quay {
+    bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.quay:not(.is-ready):not(.is-open) .quay-toggle {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateX(var(--quay-arrive-x));
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.quay:not(.is-ready):not(.is-open) .quay-toggle svg,
+.quay:not(.is-ready):not(.is-open) .quay-unread {
+  opacity: 0;
+}
+
+.quay.is-arriving:not(.is-open) .quay-toggle {
+  pointer-events: none;
+  animation: quay-arrive 0.78s var(--quay-ease) both;
+}
+
+.quay.is-arriving:not(.is-open) .quay-toggle:hover {
+  transform: none;
+  background: var(--surface, #1c1c20);
+}
+
+.quay.is-arriving:not(.is-open) .quay-toggle svg {
+  animation: quay-arrive-icon 0.78s var(--quay-ease) both;
+}
+
+@keyframes quay-arrive {
+  0% {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    opacity: 0;
+    transform: translateX(var(--quay-arrive-x));
+    box-shadow: none;
+  }
+  32% {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    opacity: 1;
+    transform: translateX(0);
+    box-shadow: 0 6px 16px color-mix(in oklab, #000 22%, transparent);
+  }
+  100% {
+    width: var(--quay-fab);
+    height: var(--quay-fab);
+    border-radius: 0.75rem;
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 10px 28px color-mix(in oklab, #000 28%, transparent);
+  }
+}
+
+@keyframes quay-arrive-icon {
+  0%,
+  38% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.quay .quay-toggle {
+  position: relative;
+  width: var(--quay-fab);
+  height: var(--quay-fab);
+  display: grid;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: var(--surface, #1c1c20);
+  color: var(--fg, #f4f4f5);
+  outline: 1px solid var(--border);
+  box-shadow: 0 10px 28px color-mix(in oklab, #000 28%, transparent);
+  transition:
+    transform 0.32s var(--quay-ease),
+    background 0.22s ease,
+    outline-color 0.22s ease,
+    box-shadow 0.32s var(--quay-ease),
+    opacity 0.16s ease;
+}
+
+.quay .quay-toggle:hover {
+  transform: translateY(-2px);
+  background: color-mix(in oklab, var(--surface, #1c1c20) 88%, #fff);
+  outline-color: color-mix(in oklab, #fff 16%, transparent);
+  box-shadow: 0 14px 32px color-mix(in oklab, #000 32%, transparent);
+}
+
+.quay .quay-toggle:hover svg {
+  transform: translateY(-1px);
+}
+
+.quay .quay-toggle:active {
+  transform: scale(0.94);
+}
+
+.quay .quay-toggle svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  display: block;
+  fill: currentColor;
+  transform-origin: 50% 80%;
+  transition: transform 0.34s var(--quay-ease);
+}
+
+.quay-unread {
+  position: absolute;
+  top: 0.32rem;
+  right: 0.32rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #e5484d;
+  box-shadow: 0 0 0 2px var(--surface, #1c1c20);
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--quay-ease),
+    transform 0.22s var(--quay-ease);
+}
+
+.quay.has-unread:not(.is-open) .quay-unread {
+  opacity: 1;
+  transform: scale(1);
+  animation: quay-unread-pulse 2.4s var(--quay-out) infinite;
+}
+
+.quay.is-open .quay-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.08);
+  transition:
+    opacity 0.12s ease,
+    transform 0.42s var(--quay-ease);
+}
+
+.quay-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--quay-fab);
+  height: var(--quay-fab);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface, #1c1c20);
+  color: var(--quay-fg);
+  outline: 1px solid var(--quay-line);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 28px color-mix(in oklab, #000 28%, transparent);
+  overflow: hidden;
+  transform-origin: bottom right;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    width 0.42s var(--quay-ease),
+    height 0.42s var(--quay-ease),
+    border-radius 0.42s var(--quay-ease),
+    opacity 0.16s ease,
+    background 0.32s ease,
+    box-shadow 0.42s var(--quay-ease);
+}
+
+.quay.is-open .quay-panel {
+  width: var(--quay-w);
+  height: var(--quay-h);
+  border-radius: var(--quay-radius);
+  background: var(--quay-panel);
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow:
+    0 24px 64px color-mix(in oklab, #000 52%, transparent),
+    inset 0 1px 0 color-mix(in oklab, #fff 5%, transparent);
+}
+
+.quay:not(.is-open) .quay-panel {
+  transition-duration: 0.34s, 0.34s, 0.34s, 0.14s, 0.24s, 0.34s;
+}
+
+.quay-panel > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+}
+
+.quay.is-open .quay-panel > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.22s ease 0.14s,
+    transform 0.28s var(--quay-ease) 0.12s;
+}
+
+.quay-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem 0.7rem 0.85rem;
+  border-bottom: 1px solid var(--quay-line);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 8;
+  background: var(--quay-panel);
+}
+
+.quay-who {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.quay-face-wrap {
+  position: relative;
+  width: 2.05rem;
+  height: 2.05rem;
+  flex-shrink: 0;
+}
+
+.quay-who.no-face .quay-face-wrap {
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.quay-face {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 999px;
+  background: #0e0e10;
+  outline: 1px solid color-mix(in oklab, #fff 10%, transparent);
+}
+
+.quay-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.quay-meta strong {
+  display: block;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #f7f7f8;
+  line-height: 1.2;
+}
+
+.quay-lastseen {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--quay-muted);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.quay-status-dot {
+  display: none;
+  position: absolute;
+  right: -0.05rem;
+  bottom: -0.05rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 0 2px var(--quay-panel);
+  pointer-events: none;
+}
+
+.quay-who.is-online .quay-lastseen,
+.quay-lastseen.is-online {
+  color: #b4b4bc;
+}
+
+.quay-who.is-online .quay-status-dot,
+.quay-who.is-status .quay-status-dot {
+  display: block;
+}
+
+.quay-who.is-busy .quay-status-dot {
+  background: #f5a524;
+}
+
+.quay-who.is-work .quay-status-dot {
+  background: #70b8ff;
+}
+
+.quay-who.is-away .quay-status-dot {
+  background: #8b8b93;
+}
+
+.quay-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.4rem;
+  color: var(--quay-muted);
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.quay-close:hover {
+  background: color-mix(in oklab, #fff 7%, transparent);
+  color: #f4f4f5;
+}
+
+.quay-close:active {
+  transform: scale(0.96);
+}
+
+.quay-close svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: block;
+  transition: transform 0.22s var(--quay-ease);
+}
+
+.quay-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+
+.quay:not(.has-name) .quay-settings-btn {
+  display: none;
+}
+
+.quay.is-settings .quay-settings-btn {
+  color: #f4f4f5;
+  background: color-mix(in oklab, #fff 8%, transparent);
+}
+
+.quay.is-settings .quay-settings-btn svg {
+  transform: rotate(30deg);
+}
+
+.quay-settings {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  align-items: flex-start;
+  justify-content: stretch;
+  padding: 0;
+  padding-top: 3.55rem;
+  background: color-mix(in oklab, #070709 42%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.quay.has-name.is-settings .quay-log,
+.quay.has-name.is-settings .quay-form {
+  pointer-events: none;
+}
+
+.quay.is-open .quay-panel > .quay-settings {
+  opacity: 0;
+  transform: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease;
+}
+
+.quay.is-open.has-name.is-settings .quay-panel > .quay-settings,
+.quay.is-open.has-name.is-settings-out .quay-panel > .quay-settings {
+  visibility: visible;
+}
+
+.quay.is-open.has-name.is-settings .quay-panel > .quay-settings {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.quay.is-open.has-name.is-settings-out .quay-panel > .quay-settings {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quay-settings-sheet {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.15rem 1.25rem 1.3rem;
+  border-radius: 0;
+  background: var(--quay-panel);
+  border-bottom: 1px solid var(--quay-line);
+  box-shadow: 0 16px 32px color-mix(in oklab, #000 36%, transparent);
+  transform: translateY(-8px);
+  opacity: 0.55;
+  transition:
+    transform 0.28s var(--quay-ease),
+    opacity 0.22s ease;
+}
+
+.quay.is-settings .quay-settings-sheet {
+  transform: none;
+  opacity: 1;
+}
+
+.quay-field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quay-field-wrap span {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #b4b4bc;
+}
+
+.quay-field {
+  width: 100%;
+  border: 0;
+  border-radius: 0.7rem;
+  background: #111113;
+  outline: 1px solid color-mix(in oklab, #fff 9%, transparent);
+  color: #f4f4f5;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  padding: 0.78rem 0.9rem;
+}
+
+.quay-field:focus {
+  outline-color: color-mix(in oklab, #fff 22%, transparent);
+}
+
+.quay-field::placeholder {
+  color: #5c5c64;
+}
+
+.quay-settings-group {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.75rem;
+  background: #111113;
+  outline: 1px solid color-mix(in oklab, #fff 8%, transparent);
+  overflow: hidden;
+}
+
+.quay-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+}
+
+.quay-settings-row + .quay-settings-row {
+  border-top: 1px solid color-mix(in oklab, #fff 7%, transparent);
+}
+
+.quay-settings-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #ececee;
+}
+
+.quay-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex-shrink: 0;
+  width: 4.7rem;
+  padding: 0.14rem;
+  border-radius: 0.55rem;
+  background: color-mix(in oklab, #fff 6%, transparent);
+}
+
+.quay .quay-seg-btn {
+  display: grid;
+  place-items: center;
+  height: 1.7rem;
+  padding: 0;
+  border-radius: 0.42rem;
+  color: #8b8b93;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.quay .quay-seg-btn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: block;
+}
+
+.quay .quay-seg-btn.is-on {
+  background: #ececee;
+  color: #111;
+}
+
+.quay .quay-switch {
+  width: 2.5rem;
+  height: 1.48rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, #fff 10%, transparent);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.quay .quay-switch::after {
+  content: "";
+  position: absolute;
+  top: 0.16rem;
+  left: 0.16rem;
+  width: 1.16rem;
+  height: 1.16rem;
+  border-radius: 999px;
+  background: #8b8b93;
+  transition: transform 0.2s var(--quay-ease), background 0.2s ease;
+}
+
+.quay .quay-switch.is-on {
+  background: #ececee;
+}
+
+.quay .quay-switch.is-on::after {
+  transform: translateX(1.02rem);
+  background: #111;
+}
+
+.quay-ended {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3.55rem 1.25rem 1.25rem;
+  background: color-mix(in oklab, #070709 42%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.quay-ended-copy {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--quay-muted);
+}
+
+.quay.is-ended .quay-log,
+.quay.is-ended .quay-form {
+  pointer-events: none;
+}
+
+.quay.is-ended .quay-form {
+  display: none;
+}
+
+.quay.is-open .quay-panel > .quay-ended {
+  opacity: 0;
+  transform: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease;
+}
+
+.quay.is-open.is-ended .quay-panel > .quay-ended {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.quay .quay-new {
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  box-shadow: 0 4px 16px color-mix(in oklab, #000 22%, transparent);
+  transform: scale(0.96);
+  transition:
+    transform 0.22s var(--quay-ease),
+    background 0.18s ease;
+}
+
+.quay.is-ended .quay-new {
+  transform: none;
+}
+
+.quay .quay-new:hover {
+  transform: translateY(-1px);
+}
+
+.quay .quay-new:active {
+  transform: scale(0.97);
+}
+
+.quay-log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 1.25rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  scroll-behavior: smooth;
+}
+
+.quay-empty {
+  margin: auto;
+  max-width: 14.5rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--quay-muted);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+
+.quay-row {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.quay-row.is-stack {
+  margin-top: -0.82rem;
+}
+
+.quay-row.has-follow .quay-msg-footer {
+  display: none;
+}
+
+.quay-row[data-from="you"] {
+  align-items: flex-end;
+}
+
+.quay-row[data-from="host"] {
+  align-items: flex-start;
+}
+
+.quay-msg-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #c4c4cc;
+  padding: 0 0.15rem;
+}
+
+.quay-row[data-from="you"] .quay-msg-label {
+  color: var(--quay-muted);
+}
+
+.quay-msg-content {
+  min-width: 0;
+  max-width: 86%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow: visible;
+}
+
+.quay-row[data-from="you"] .quay-msg-content {
+  align-items: flex-end;
+}
+
+.quay-row[data-from="host"] .quay-msg-content {
+  align-items: flex-start;
+}
+
+.quay-msg-footer {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: #6a6a72;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.quay-row:hover .quay-msg-footer,
+.quay-row:focus-within .quay-msg-footer {
+  opacity: 1;
+}
+
+.quay-row.has-reacts {
+  margin-bottom: 0.55rem;
+}
+
+.quay-bubble-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: 100%;
+}
+
+.quay-bubble-main {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.quay-msg-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.18rem;
+  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-2px);
+  transition:
+    opacity 0.16s var(--quay-ease),
+    transform 0.16s var(--quay-ease);
+}
+
+.quay-msg-act {
+  position: relative;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #2a2a2e;
+  color: #c4c4cc;
+  outline: 1px solid color-mix(in oklab, #fff 10%, transparent);
+  transition:
+    background 0.16s ease,
+    color 0.16s ease;
+}
+
+.quay-msg-act[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.38rem);
+  transform: translateX(-50%) translateY(3px);
+  padding: 0.22rem 0.42rem;
+  border-radius: 0.35rem;
+  background: #2a2a2e;
+  outline: 1px solid color-mix(in oklab, #fff 12%, transparent);
+  color: #ececee;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  transition:
+    opacity 0.14s ease 0.04s,
+    transform 0.16s var(--quay-ease);
+}
+
+.quay-msg-act[data-tip]:hover::after,
+.quay-msg-act[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.quay-row.is-reacting .quay-react-plus[data-tip]::after {
+  content: "Close";
+}
+
+.quay-msg-act svg {
+  width: 0.68rem;
+  height: 0.68rem;
+  display: block;
+  transition: transform 0.18s var(--quay-ease);
+}
+
+.quay-msg-act:hover {
+  background: #3a3a40;
+  color: #f4f4f5;
+}
+
+.quay-row[data-from="host"]:hover .quay-msg-actions,
+.quay-row[data-from="host"]:focus-within .quay-msg-actions,
+.quay-row[data-from="host"].is-reacting .quay-msg-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.quay-row.is-reacting .quay-react-plus {
+  background: #ececee;
+  color: #111;
+}
+
+.quay-row.is-reacting .quay-react-plus svg {
+  transform: rotate(45deg);
+}
+
+.quay-act-copy.is-copied {
+  background: #ececee;
+  color: #111;
+}
+
+.quay-msg-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.quay-row[data-from="you"] .quay-msg-cluster {
+  align-items: flex-end;
+}
+
+.quay-row[data-from="host"] .quay-msg-cluster {
+  align-items: flex-start;
+}
+
+.quay button.quay-quote {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.22rem;
+  max-width: min(16rem, 100%);
+  margin: 0;
+  padding: 0.55rem 0.85rem 0.5rem;
+  border: 0;
+  border-radius: 0.85rem;
+  background: color-mix(in oklab, #fff 6%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, #fff 10%, transparent);
+  outline: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.quay button.quay-quote:hover {
+  background: color-mix(in oklab, #fff 9%, transparent);
+}
+
+.quay button.quay-quote:focus-visible {
+  box-shadow: none;
+}
+
+.quay-quote-who {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: #c4c4cc;
+}
+
+.quay-quote-text {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.4;
+  color: #6a6a72;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quay-row.is-flash .quay-bubble {
+  outline-color: color-mix(in oklab, #fff 28%, transparent);
+  background: #26262c;
+}
+
+.quay-replybar {
+  display: none;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, #fff 7%, var(--quay-well));
+  outline: 1px solid color-mix(in oklab, #fff 10%, transparent);
+}
+
+.quay.is-replying .quay-replybar {
+  display: flex;
+}
+
+.quay-replybar-body {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.quay-replybar-who {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #ececee;
+}
+
+.quay-replybar-text {
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--quay-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quay .quay-replybar-clear {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #8e8e96;
+}
+
+.quay .quay-replybar-clear svg {
+  width: 0.7rem;
+  height: 0.7rem;
+  display: block;
+}
+
+.quay .quay-replybar-clear:hover {
+  color: #ececee;
+  background: color-mix(in oklab, #fff 8%, transparent);
+}
+
+.quay-react-tray {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  display: none;
+  align-items: center;
+  gap: 0.05rem;
+  padding: 0.28rem 0.32rem;
+  border-radius: 999px;
+  background: #1c1c20;
+  outline: 1px solid color-mix(in oklab, #fff 12%, transparent);
+  box-shadow: 0 10px 28px color-mix(in oklab, #000 42%, transparent);
+  z-index: 4;
+}
+
+.quay-row[data-from="host"] .quay-react-tray {
+  left: 0;
+}
+
+.quay-row.is-reacting .quay-react-tray {
+  display: flex;
+  animation: quay-fade-up 0.22s var(--quay-ease) both;
+}
+
+.quay-react-pick {
+  width: 1.85rem;
+  height: 1.85rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  line-height: 1;
+  background: transparent;
+  transition: transform 0.16s var(--quay-ease), background 0.16s ease;
+}
+
+.quay-react-pick:hover {
+  transform: scale(1.18);
+  background: color-mix(in oklab, #fff 8%, transparent);
+}
+
+.quay-react-pick.is-on {
+  background: color-mix(in oklab, #fff 12%, transparent);
+}
+
+.quay-reacts {
+  position: absolute;
+  bottom: -0.55rem;
+  display: flex;
+  gap: 0.15rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.quay-row[data-from="host"] .quay-reacts {
+  left: 0.4rem;
+}
+
+.quay-row[data-from="you"] .quay-reacts {
+  right: 0.4rem;
+}
+
+.quay-react-stamp {
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.18rem;
+  border-radius: 999px;
+  background: #141416;
+  outline: 1px solid color-mix(in oklab, #fff 14%, transparent);
+  font-size: 0.72rem;
+  line-height: 1;
+  box-shadow: 0 4px 10px color-mix(in oklab, #000 28%, transparent);
+}
+
+.quay-react-stamp.is-you {
+  outline-color: color-mix(in oklab, #fff 22%, transparent);
+}
+
+@media (hover: none) {
+  .quay-row[data-from="host"] .quay-msg-actions {
+    opacity: 0.7;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+.quay-bubble {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.018em;
+  text-wrap: pretty;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.quay-bubble[data-variant="soft"] {
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.75rem 0.75rem 0.28rem 0.75rem;
+  background: #2c2c32;
+  color: #f4f4f5;
+}
+
+.quay-row[data-from="you"].has-follow .quay-bubble[data-variant="soft"] {
+  border-bottom-right-radius: 0.35rem;
+}
+
+.quay-row[data-from="you"].is-stack .quay-bubble[data-variant="soft"] {
+  border-top-right-radius: 0.28rem;
+}
+
+.quay-row[data-from="you"].is-stack.has-follow .quay-bubble[data-variant="soft"] {
+  border-bottom-right-radius: 0.28rem;
+}
+
+.quay-bubble[data-variant="ghost"] {
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.75rem 0.75rem 0.75rem 0.28rem;
+  background: #1c1c20;
+  outline: 1px solid color-mix(in oklab, #fff 9%, transparent);
+  color: #ececee;
+}
+
+.quay-row[data-from="host"].has-follow .quay-bubble[data-variant="ghost"] {
+  border-bottom-left-radius: 0.35rem;
+}
+
+.quay-row[data-from="host"].is-stack .quay-bubble[data-variant="ghost"] {
+  border-top-left-radius: 0.28rem;
+}
+
+.quay-row[data-from="host"].is-stack.has-follow .quay-bubble[data-variant="ghost"] {
+  border-bottom-left-radius: 0.28rem;
+}
+
+.quay-row.is-enter[data-from="you"] .quay-bubble {
+  transform-origin: 100% 100%;
+  animation: quay-pop-you 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.quay-row.is-enter[data-from="host"] .quay-bubble {
+  transform-origin: 0% 100%;
+  animation: quay-pop-host 0.56s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.quay-row.is-enter.is-stack .quay-bubble {
+  animation-duration: 0.38s;
+}
+
+.quay-row.is-enter .quay-msg-label {
+  animation: quay-fade-up 0.36s var(--quay-ease) 0.05s both;
+}
+
+.quay-linkcard.is-enter {
+  transform-origin: 50% 100%;
+  animation: quay-fade-up 0.42s var(--quay-ease) both;
+}
+
+.quay-row[data-from="you"] .quay-linkcard.is-enter {
+  transform-origin: 100% 100%;
+}
+
+.quay-row[data-from="host"] .quay-linkcard.is-enter {
+  transform-origin: 0% 100%;
+}
+
+@keyframes quay-unread-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--surface, #1c1c20); }
+  50% { box-shadow: 0 0 0 2px var(--surface, #1c1c20), 0 0 0 5px color-mix(in oklab, #e5484d 28%, transparent); }
+}
+
+@keyframes quay-pop-you {
+  0% {
+    opacity: 0;
+    transform: translate3d(10px, 12px, 0) scale(0.82);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(-1px, -2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes quay-pop-host {
+  0% {
+    opacity: 0;
+    transform: translate3d(-10px, 12px, 0) scale(0.82);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(1px, -2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes quay-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.quay-typing .quay-bubble {
+  min-height: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.quay-typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.quay-typing-dot {
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.35;
+  animation: quay-typing 0.9s var(--quay-out) infinite;
+}
+
+.quay-typing-dot:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.quay-typing-dot:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+@keyframes quay-typing {
+  0%, 100% {
+    opacity: 0.28;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.quay-bubble a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+  text-underline-offset: 0.16em;
+}
+
+.quay-bubble a:hover {
+  text-decoration-color: currentColor;
+}
+
+.quay-bubble code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.84em;
+  padding: 0.08em 0.3em;
+  border-radius: 0.3rem;
+  background: color-mix(in oklab, currentColor 10%, transparent);
+}
+
+.quay-bubble pre {
+  margin: 0.4rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8em;
+  line-height: 1.45;
+  background: color-mix(in oklab, #fff 6%, transparent);
+}
+
+.quay-bubble strong {
+  font-weight: 600;
+}
+
+.quay-row.is-link-only .quay-bubble {
+  display: none;
+}
+
+.quay-linkcard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  max-width: 18.5rem;
+  border-radius: 0.75rem;
+  text-decoration: none !important;
+  outline: 1px solid color-mix(in oklab, #fff 10%, transparent);
+  background: #19191c;
+  color: inherit;
+  transition: transform 0.2s var(--quay-ease), outline-color 0.2s ease;
+}
+
+.quay-row[data-from="you"] .quay-linkcard {
+  background: #24242a;
+}
+
+.quay-linkcard:hover {
+  transform: translateY(-1px);
+  outline-color: color-mix(in oklab, #fff 18%, transparent);
+}
+
+.quay-linkcard-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  overflow: hidden;
+  background: color-mix(in oklab, #fff 5%, transparent);
+}
+
+.quay-linkcard-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.quay-linkcard-body {
+  padding: 0.6rem 0.7rem 0.65rem;
+  min-width: 0;
+}
+
+.quay-linkcard-site {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  margin-bottom: 0.28rem;
+}
+
+.quay-linkcard-favicon {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 0.2rem;
+  flex-shrink: 0;
+}
+
+.quay-linkcard-body em {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: normal;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #8a8a92;
+  text-transform: lowercase;
+}
+
+.quay-linkcard-body strong {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.3;
+}
+
+.quay-linkcard-body span {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.22rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--quay-muted);
+  line-height: 1.4;
+}
+
+.quay.has-name .quay-gate {
+  display: none;
+}
+
+.quay:not(.has-name) .quay-form,
+.quay:not(.has-name) .quay-log {
+  display: none;
+}
+
+.quay:not(.has-name) .quay-bar {
+  border-bottom-color: transparent;
+}
+
+.quay:not(.has-name) .quay-who {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quay-gate {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 1.25rem 1.35rem 2.5rem;
+  text-align: center;
+}
+
+.quay-gate-copy {
+  margin: 0;
+  max-width: 16rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--quay-muted);
+  line-height: 1.35;
+}
+
+.quay-gate-name {
+  width: 100%;
+  max-width: 18rem;
+  border: 0;
+  background: transparent;
+  color: #f7f7f8;
+  font: inherit;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+  text-align: center;
+  padding: 0.15rem 0 0.25rem;
+  outline: none;
+  caret-color: #f7f7f8;
+}
+
+.quay-gate-name::placeholder {
+  color: transparent;
+}
+
+.quay .quay-gate-go {
+  margin-top: 0.2rem;
+  padding: 0.42rem 1.1rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, #fff 6%, transparent);
+  outline: 1px solid color-mix(in oklab, #fff 11%, transparent);
+  color: #ececee;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.22s var(--quay-ease),
+    transform 0.22s var(--quay-ease),
+    background 0.18s ease,
+    outline-color 0.18s ease;
+}
+
+.quay-gate.has-value .quay-gate-go {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.quay .quay-gate-go:hover:not(:disabled) {
+  background: color-mix(in oklab, #fff 10%, transparent);
+  outline-color: color-mix(in oklab, #fff 18%, transparent);
+}
+
+.quay .quay-gate-go:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.quay-form {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0.7rem 0.85rem;
+  flex-shrink: 0;
+  background: #141416;
+}
+
+.quay-form::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: linear-gradient(
+    in oklab 157deg,
+    oklab(19.2% 0.001 -0.004) 76%,
+    oklab(62.6% 0.178 0.076 / 0.3) 135%
+  );
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.quay-form:has(.quay-end:hover)::before,
+.quay-form:has(.quay-end:focus-visible)::before {
+  opacity: 1;
+}
+
+.quay-form > * {
+  position: relative;
+  z-index: 1;
+}
+
+.quay-human {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #6a6a72;
+  line-height: 1.3;
+}
+
+.quay-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+  min-height: 1.1rem;
+}
+
+.quay .quay-end {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+  filter: none;
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #e5484d;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.quay .quay-end:hover {
+  color: #f06a6e;
+}
+
+.quay .quay-end:disabled,
+.quay .quay-new:disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.quay-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #0c0c13;
+  outline: 1px solid #ffffff14;
+  transition: outline-color 0.18s ease;
+}
+
+.quay-composer:focus-within {
+  outline-color: color-mix(in oklab, #fff 18%, transparent);
+}
+
+.quay-form textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 7.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--quay-fg);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  line-height: 1.45;
+  padding: 0.45rem 0;
+  resize: none;
+  outline: none;
+  field-sizing: content;
+}
+
+.quay-form textarea::placeholder {
+  color: #6a6a72;
+}
+
+.quay-send {
+  width: 1.85rem;
+  height: 1.85rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #151521;
+  color: #ececee;
+  transition:
+    transform 0.18s var(--quay-ease),
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.quay-send svg {
+  width: 0.82rem;
+  height: 0.82rem;
+  display: block;
+}
+
+.quay-send:not(:disabled) {
+  background: #fff;
+  color: #111;
+}
+
+.quay-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.quay-send:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.quay-send:disabled {
+  cursor: default;
+}
+
+.quay-send.is-pulse {
+  animation: quay-send-pulse 0.36s var(--quay-ease);
+}
+
+@keyframes quay-send-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quay-toggle,
+  .quay-panel,
+  .quay-panel > *,
+  .quay-send,
+  .quay-close,
+  .quay-msg-footer,
+  .quay-form::before {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .quay-panel {
+    width: var(--quay-w);
+    height: var(--quay-h);
+    border-radius: var(--quay-radius);
+    background: var(--quay-panel);
+  }
+
+  .quay:not(.is-ready):not(.is-open) .quay-toggle {
+    width: var(--quay-fab);
+    height: var(--quay-fab);
+    border-radius: 0.75rem;
+    transform: none;
+  }
+
+  .quay.is-side-out .quay-toggle,
+  .quay.is-side-out .quay-panel,
+  .quay.is-side-in .quay-toggle,
+  .quay.is-side-in .quay-panel {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .quay-row.is-enter .quay-bubble,
+  .quay-row.is-enter .quay-msg-label,
+  .quay-linkcard.is-enter,
+  .quay-row.is-reacting .quay-react-tray {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .quay-row.is-enter,
+  .quay-typing-dot,
+  .quay-send.is-pulse,
+  .quay-unread {
+    animation: none !important;
+  }
+
+  .quay-log {
+    scroll-behavior: auto;
+  }
+
+  .quay-settings,
+  .quay-settings-sheet,
+  .quay-ended,
+  .quay-new {
+    transition: none !important;
+  }
+
+  .quay-form::before {
+    transition: none !important;
+  }
+
+  .quay-settings,
+  .quay-ended {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media print {
+  .quay {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1099.98px), (hover: none), (pointer: coarse) {
+  .quay:not(.is-always-on) {
+    display: none !important;
+  }
+}

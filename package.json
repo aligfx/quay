@@ -1,0 +1,66 @@
+{
+  "name": "@aligfx/quay",
+  "version": "0.1.0",
+  "description": "Quay Chat — open-source site chat widget that docks to any channel (Slack, Telegram, webhook, or your own backend).",
+  "license": "MIT",
+  "author": "Ali Al-Janabi",
+  "homepage": "https://github.com/aligfx/quay#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aligfx/quay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aligfx/quay/issues"
+  },
+  "keywords": [
+    "chat",
+    "widget",
+    "live-chat",
+    "slack",
+    "telegram",
+    "webhook",
+    "customer-support",
+    "quay"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/quay.cjs",
+  "module": "./dist/quay.js",
+  "types": "./dist/quay.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/quay.d.ts",
+      "import": "./dist/quay.js",
+      "require": "./dist/quay.cjs"
+    },
+    "./style.css": "./dist/quay.css",
+    "./package.json": "./package.json"
+  },
+  "unpkg": "./dist/quay.iife.js",
+  "jsdelivr": "./dist/quay.iife.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/copy-css.mjs",
+    "build:site": "node scripts/build-site.mjs",
+    "dev": "node demo/mock-server.mjs",
+    "demo": "node demo/mock-server.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
